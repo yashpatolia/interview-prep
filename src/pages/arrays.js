@@ -298,6 +298,17 @@ seen.<span class="fn">add</span>(<span class="num">5</span>)
         <summary>Show hint</summary>
         <p class="hint-body">Use a set. As you visit each number, check if it's already in your set. If yes, duplicate found!</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">contains_duplicate</span>(nums: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">bool</span>:
+    seen = <span class="fn">set</span>()                <span class="cm"># O(1) lookup/insert</span>
+    <span class="kw">for</span> num <span class="kw">in</span> nums:
+        <span class="kw">if</span> num <span class="kw">in</span> seen:       <span class="cm"># already saw this number → duplicate</span>
+            <span class="kw">return</span> <span class="kw">True</span>
+        seen.<span class="fn">add</span>(num)         <span class="cm"># remember it for future iterations</span>
+    <span class="kw">return</span> <span class="kw">False</span>            <span class="cm"># finished with no repeats</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — single pass &nbsp;·&nbsp; <strong>Space:</strong> O(n) — set can hold up to n elements</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/contains-duplicate/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -316,6 +327,16 @@ seen.<span class="fn">add</span>(<span class="num">5</span>)
         <summary>Show hint</summary>
         <p class="hint-body">Count character frequencies in both strings (use <code>Counter</code> or a dict). If the frequency maps are equal, they're anagrams.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">from</span> collections <span class="kw">import</span> Counter
+
+<span class="kw">def</span> <span class="fn">is_anagram</span>(s: <span class="fn">str</span>, t: <span class="fn">str</span>) -> <span class="fn">bool</span>:
+    <span class="kw">if</span> <span class="fn">len</span>(s) != <span class="fn">len</span>(t):     <span class="cm"># different lengths can't be anagrams</span>
+        <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">return</span> Counter(s) == Counter(t)  <span class="cm"># compare letter-frequency maps</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — building each Counter is O(n) &nbsp;·&nbsp; <strong>Space:</strong> O(n) — two frequency maps</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/valid-anagram/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -333,6 +354,18 @@ seen.<span class="fn">add</span>(<span class="num">5</span>)
         <summary>Show hint</summary>
         <p class="hint-body">As you iterate, for each number <code>x</code>, check if <code>target - x</code> is already in a hash map. If yes, you found the pair!</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">two_sum</span>(nums: <span class="fn">list</span>[<span class="fn">int</span>], target: <span class="fn">int</span>) -> <span class="fn">list</span>[<span class="fn">int</span>]:
+    seen = {}                    <span class="cm"># value → index, O(1) lookup</span>
+    <span class="kw">for</span> i, x <span class="kw">in</span> <span class="fn">enumerate</span>(nums):
+        complement = target - x
+        <span class="kw">if</span> complement <span class="kw">in</span> seen:   <span class="cm"># partner already seen → found the pair</span>
+            <span class="kw">return</span> [seen[complement], i]
+        seen[x] = i               <span class="cm"># remember this number's index</span>
+    <span class="kw">return</span> []                  <span class="cm"># no pair found (won't happen per constraints)</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — single pass, O(1) hash lookups &nbsp;·&nbsp; <strong>Space:</strong> O(n) — hash map of seen values</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/two-sum/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -350,6 +383,18 @@ seen.<span class="fn">add</span>(<span class="num">5</span>)
         <summary>Show hint</summary>
         <p class="hint-body">The <em>sorted version</em> of a string is the same for all anagrams — use <code>tuple(sorted(s))</code> as your hash map key.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+
+<span class="kw">def</span> <span class="fn">group_anagrams</span>(strs: <span class="fn">list</span>[<span class="fn">str</span>]) -> <span class="fn">list</span>[<span class="fn">list</span>[<span class="fn">str</span>]]:
+    groups = defaultdict(<span class="fn">list</span>)
+    <span class="kw">for</span> s <span class="kw">in</span> strs:
+        key = <span class="fn">tuple</span>(<span class="fn">sorted</span>(s))   <span class="cm"># anagrams share the same sorted key</span>
+        groups[key].append(s)
+    <span class="kw">return</span> <span class="fn">list</span>(groups.values())</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n·k log k) — n strings, each sorted in O(k log k) for length k &nbsp;·&nbsp; <strong>Space:</strong> O(n·k) — storing all strings in groups</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/group-anagrams/" target="_blank">Open on LeetCode ↗</a>
   </div>

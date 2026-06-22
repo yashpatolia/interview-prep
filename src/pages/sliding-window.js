@@ -227,6 +227,19 @@ export function render() {
         <summary>Show hint</summary>
         <p class="hint-body">Think of L as the "buy day". Slide R rightward. If <code>prices[R] &lt; prices[L]</code>, move L to R (found a cheaper buy day). Otherwise compute <code>prices[R] - prices[L]</code> and update max profit. This is a variable window where L only moves when we find a cheaper buy.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">max_profit</span>(prices: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">int</span>:
+    left = <span class="num">0</span>                 <span class="cm"># cheapest buy day seen so far</span>
+    best = <span class="num">0</span>
+    <span class="kw">for</span> right <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(prices)):
+        <span class="kw">if</span> prices[right] &lt; prices[left]:
+            left = right       <span class="cm"># found a cheaper buy day, reset window start</span>
+        <span class="kw">else</span>:
+            best = <span class="fn">max</span>(best, prices[right] - prices[left])
+    <span class="kw">return</span> best</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — single pass &nbsp;·&nbsp; <strong>Space:</strong> O(1)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -245,6 +258,21 @@ export function render() {
         <summary>Show hint</summary>
         <p class="hint-body">Variable window + a <code>set</code> tracking the current window's characters. Expand R by adding <code>s[R]</code> to the set. If it's already there, shrink L until the duplicate is gone. The answer is <code>max(R - L + 1)</code> over all valid states.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">length_of_longest_substring</span>(s: <span class="fn">str</span>) -> <span class="fn">int</span>:
+    window = <span class="fn">set</span>()
+    left = <span class="num">0</span>
+    best = <span class="num">0</span>
+    <span class="kw">for</span> right <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(s)):
+        <span class="kw">while</span> s[right] <span class="kw">in</span> window:   <span class="cm"># shrink until duplicate is removed</span>
+            window.remove(s[left])
+            left += <span class="num">1</span>
+        window.add(s[right])
+        best = <span class="fn">max</span>(best, right - left + <span class="num">1</span>)
+    <span class="kw">return</span> best</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — each pointer traverses s at most once &nbsp;·&nbsp; <strong>Space:</strong> O(min(n, charset)) — window set</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -263,6 +291,25 @@ export function render() {
         <summary>Show hint</summary>
         <p class="hint-body">A window is valid when <code>(window_size - max_count) &lt;= k</code>, where <code>max_count</code> is the count of the most frequent character in the window. Track character frequencies in a dict. Shrink L when the window becomes invalid.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">character_replacement</span>(s: <span class="fn">str</span>, k: <span class="fn">int</span>) -> <span class="fn">int</span>:
+    counts = {}
+    left = <span class="num">0</span>
+    max_count = <span class="num">0</span>            <span class="cm"># highest single-char frequency seen in any window so far</span>
+    best = <span class="num">0</span>
+    <span class="kw">for</span> right <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(s)):
+        counts[s[right]] = counts.get(s[right], <span class="num">0</span>) + <span class="num">1</span>
+        max_count = <span class="fn">max</span>(max_count, counts[s[right]])
+        window_size = right - left + <span class="num">1</span>
+        <span class="kw">if</span> window_size - max_count &gt; k:   <span class="cm"># too many chars would need replacing</span>
+            counts[s[left]] -= <span class="num">1</span>
+            left += <span class="num">1</span>
+        <span class="kw">else</span>:
+            best = <span class="fn">max</span>(best, window_size)
+    <span class="kw">return</span> best</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — right pointer scans once, left only moves forward &nbsp;·&nbsp; <strong>Space:</strong> O(1) — at most 26 letters in counts</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/longest-repeating-character-replacement/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -281,6 +328,42 @@ export function render() {
         <summary>Show hint</summary>
         <p class="hint-body">Build a frequency map for <code>t</code>. Expand R, decrementing counts in a second map. Track <code>have</code> (how many characters satisfy their required count) vs <code>need</code> (total distinct chars in t). Once <code>have == need</code>, try shrinking L to minimise the window. Update the answer each time the window is valid.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">from</span> collections <span class="kw">import</span> Counter
+
+<span class="kw">def</span> <span class="fn">min_window</span>(s: <span class="fn">str</span>, t: <span class="fn">str</span>) -> <span class="fn">str</span>:
+    <span class="kw">if</span> <span class="kw">not</span> t:
+        <span class="kw">return</span> <span class="st">""</span>
+
+    need_count = Counter(t)        <span class="cm"># required frequency per character</span>
+    need = <span class="fn">len</span>(need_count)        <span class="cm"># number of distinct chars to satisfy</span>
+    have = <span class="num">0</span>                     <span class="cm"># distinct chars currently fully satisfied</span>
+    window = {}
+    res, res_len = [-<span class="num">1</span>, -<span class="num">1</span>], <span class="fn">float</span>(<span class="st">"inf"</span>)
+    left = <span class="num">0</span>
+
+    <span class="kw">for</span> right <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(s)):
+        ch = s[right]
+        window[ch] = window.get(ch, <span class="num">0</span>) + <span class="num">1</span>
+
+        <span class="kw">if</span> ch <span class="kw">in</span> need_count <span class="kw">and</span> window[ch] == need_count[ch]:
+            have += <span class="num">1</span>
+
+        <span class="kw">while</span> have == need:           <span class="cm"># window is valid — try to shrink it</span>
+            <span class="kw">if</span> (right - left + <span class="num">1</span>) &lt; res_len:
+                res = [left, right]
+                res_len = right - left + <span class="num">1</span>
+
+            window[s[left]] -= <span class="num">1</span>
+            <span class="kw">if</span> s[left] <span class="kw">in</span> need_count <span class="kw">and</span> window[s[left]] &lt; need_count[s[left]]:
+                have -= <span class="num">1</span>     <span class="cm"># shrinking broke this character's requirement</span>
+            left += <span class="num">1</span>
+
+    left, right = res
+    <span class="kw">return</span> s[left:right + <span class="num">1</span>] <span class="kw">if</span> res_len != <span class="fn">float</span>(<span class="st">"inf"</span>) <span class="kw">else</span> <span class="st">""</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n + m) — n = len(s), m = len(t); each pointer moves through s once &nbsp;·&nbsp; <strong>Space:</strong> O(m) — frequency maps bounded by t's distinct chars</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/minimum-window-substring/" target="_blank">Open on LeetCode ↗</a>
   </div>

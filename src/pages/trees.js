@@ -314,6 +314,18 @@ result = <span class="fn">search_bst</span>(root, <span class="num">3</span>)
         <summary>Show hint</summary>
         <p class="hint-body">DFS PostOrder or PreOrder. At each node, swap <code>node.left</code> and <code>node.right</code>, then recurse into both children. The base case: if <code>node</code> is None, return None.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">invert_tree</span>(root: <span class="cls">TreeNode</span>) -> <span class="cls">TreeNode</span>:
+    <span class="kw">if</span> <span class="kw">not</span> root:
+        <span class="kw">return</span> <span class="kw">None</span>             <span class="cm"># base case — nothing to invert</span>
+    root.left, root.right = (
+        <span class="fn">invert_tree</span>(root.right),  <span class="cm"># inverted right subtree becomes left</span>
+        <span class="fn">invert_tree</span>(root.left),
+    )
+    <span class="kw">return</span> root</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — visits every node once &nbsp;·&nbsp; <strong>Space:</strong> O(h) — recursion stack, h = tree height</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/invert-binary-tree/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -331,6 +343,14 @@ result = <span class="fn">search_bst</span>(root, <span class="num">3</span>)
         <summary>Show hint</summary>
         <p class="hint-body">Recursive DFS. At each node: <code>1 + max(depth(node.left), depth(node.right))</code>. Base case: if node is None, depth is 0. This naturally computes the maximum path length bottom-up.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">max_depth</span>(root: <span class="cls">TreeNode</span>) -> <span class="fn">int</span>:
+    <span class="kw">if</span> <span class="kw">not</span> root:
+        <span class="kw">return</span> <span class="num">0</span>                <span class="cm"># empty tree has depth 0</span>
+    <span class="kw">return</span> <span class="num">1</span> + <span class="fn">max</span>(<span class="fn">max_depth</span>(root.left), <span class="fn">max_depth</span>(root.right))</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — visits every node once &nbsp;·&nbsp; <strong>Space:</strong> O(h) — recursion stack depth</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/maximum-depth-of-binary-tree/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -348,6 +368,24 @@ result = <span class="fn">search_bst</span>(root, <span class="num">3</span>)
         <summary>Show hint</summary>
         <p class="hint-body">At each node, the longest path through it is <code>left_height + right_height</code>. Use a <code>nonlocal max_d</code> variable to track the global maximum as you recurse. Your recursive function returns the <em>height</em> of the subtree, but updates <code>max_d</code> as a side effect.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">diameter_of_binary_tree</span>(root: <span class="cls">TreeNode</span>) -> <span class="fn">int</span>:
+    max_d = <span class="num">0</span>
+
+    <span class="kw">def</span> <span class="fn">height</span>(node):
+        <span class="kw">nonlocal</span> max_d
+        <span class="kw">if</span> <span class="kw">not</span> node:
+            <span class="kw">return</span> <span class="num">0</span>
+        left_h = <span class="fn">height</span>(node.left)
+        right_h = <span class="fn">height</span>(node.right)
+        max_d = <span class="fn">max</span>(max_d, left_h + right_h)  <span class="cm"># side effect: track best path through this node</span>
+        <span class="kw">return</span> <span class="num">1</span> + <span class="fn">max</span>(left_h, right_h)   <span class="cm"># normal return value: subtree height</span>
+
+    height(root)
+    <span class="kw">return</span> max_d</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — each node visited once &nbsp;·&nbsp; <strong>Space:</strong> O(h) — recursion stack</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/diameter-of-binary-tree/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -365,6 +403,29 @@ result = <span class="fn">search_bst</span>(root, <span class="num">3</span>)
         <summary>Show hint</summary>
         <p class="hint-body">BFS with a <code>deque</code>. At the start of each iteration, snapshot <code>len(queue)</code> — that's exactly how many nodes are at the current level. Process exactly that many nodes, then the queue contains the next level.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">level_order</span>(root: <span class="cls">TreeNode</span>) -> <span class="fn">list</span>[<span class="fn">list</span>[<span class="fn">int</span>]]:
+    <span class="kw">if</span> <span class="kw">not</span> root:
+        <span class="kw">return</span> []
+    res = []
+    queue = deque([root])
+    <span class="kw">while</span> queue:
+        level_size = <span class="fn">len</span>(queue)    <span class="cm"># exact count of nodes at this level</span>
+        level = []
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(level_size):
+            node = queue.popleft()
+            level.append(node.val)
+            <span class="kw">if</span> node.left:
+                queue.append(node.left)
+            <span class="kw">if</span> node.right:
+                queue.append(node.right)
+        res.append(level)
+    <span class="kw">return</span> res</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — each node enqueued/dequeued once &nbsp;·&nbsp; <strong>Space:</strong> O(n) — queue holds up to one full level (worst case n/2 nodes)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/binary-tree-level-order-traversal/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -382,6 +443,19 @@ result = <span class="fn">search_bst</span>(root, <span class="num">3</span>)
         <summary>Show hint</summary>
         <p class="hint-body">Exploit the BST property. If both p and q are less than root, the LCA is in the left subtree. If both are greater, go right. Otherwise — root is "between" them — root is the LCA. No need to search both subtrees!</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">lowest_common_ancestor</span>(root: <span class="cls">TreeNode</span>, p: <span class="cls">TreeNode</span>, q: <span class="cls">TreeNode</span>) -> <span class="cls">TreeNode</span>:
+    cur = root
+    <span class="kw">while</span> cur:
+        <span class="kw">if</span> p.val &lt; cur.val <span class="kw">and</span> q.val &lt; cur.val:
+            cur = cur.left        <span class="cm"># both lie left → LCA is in left subtree</span>
+        <span class="kw">elif</span> p.val &gt; cur.val <span class="kw">and</span> q.val &gt; cur.val:
+            cur = cur.right       <span class="cm"># both lie right → LCA is in right subtree</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> cur            <span class="cm"># split point (or one equals cur) → found the LCA</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(h) — follows a single path down the BST, h = tree height &nbsp;·&nbsp; <strong>Space:</strong> O(1) — iterative, no recursion stack</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/" target="_blank">Open on LeetCode ↗</a>
   </div>

@@ -247,6 +247,19 @@ cur = head
         <summary>Show hint</summary>
         <p class="hint-body">Use three pointers: <code>prev = None</code>, <code>cur = head</code>, <code>nxt</code>. In each iteration save <code>nxt = cur.next</code>, then set <code>cur.next = prev</code>, then advance both. Draw it out on paper first — this is the single most useful linked list pattern.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">reverse_list</span>(head: <span class="cls">ListNode</span>) -> <span class="cls">ListNode</span>:
+    prev = <span class="kw">None</span>
+    cur = head
+    <span class="kw">while</span> cur:
+        nxt = cur.next       <span class="cm"># save next node before we overwrite the link</span>
+        cur.next = prev      <span class="cm"># reverse the pointer</span>
+        prev = cur           <span class="cm"># advance prev</span>
+        cur = nxt             <span class="cm"># advance cur</span>
+    <span class="kw">return</span> prev               <span class="cm"># prev is the new head</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — visits every node once &nbsp;·&nbsp; <strong>Space:</strong> O(1) — only pointers, no new nodes</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/reverse-linked-list/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -265,6 +278,23 @@ cur = head
         <summary>Show hint</summary>
         <p class="hint-body">Create a dummy head node so you always have a pointer to build from. Use a <code>cur</code> pointer that advances. At each step compare <code>l1.val</code> vs <code>l2.val</code>, attach the smaller one to <code>cur.next</code>, and advance that list's pointer. When one list runs out, attach the remaining other list directly.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">merge_two_lists</span>(l1: <span class="cls">ListNode</span>, l2: <span class="cls">ListNode</span>) -> <span class="cls">ListNode</span>:
+    dummy = <span class="cls">ListNode</span>()
+    cur = dummy
+    <span class="kw">while</span> l1 <span class="kw">and</span> l2:
+        <span class="kw">if</span> l1.val &lt;= l2.val:
+            cur.next = l1
+            l1 = l1.next
+        <span class="kw">else</span>:
+            cur.next = l2
+            l2 = l2.next
+        cur = cur.next
+    cur.next = l1 <span class="kw">if</span> l1 <span class="kw">else</span> l2   <span class="cm"># attach whichever list still has nodes</span>
+    <span class="kw">return</span> dummy.next</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n + m) — walks each list once &nbsp;·&nbsp; <strong>Space:</strong> O(1) — reuses existing nodes</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/merge-two-sorted-lists/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -281,6 +311,18 @@ cur = head
         <summary>Show hint</summary>
         <p class="hint-body">Use Floyd's fast/slow pointer algorithm. Start both at <code>head</code>. Move <code>fast</code> two steps and <code>slow</code> one step each iteration. If they ever point to the same node, a cycle exists. If <code>fast</code> reaches <code>None</code>, there is no cycle.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">has_cycle</span>(head: <span class="cls">ListNode</span>) -> <span class="fn">bool</span>:
+    slow = fast = head
+    <span class="kw">while</span> fast <span class="kw">and</span> fast.next:
+        slow = slow.next        <span class="cm"># moves 1 step</span>
+        fast = fast.next.next   <span class="cm"># moves 2 steps</span>
+        <span class="kw">if</span> slow <span class="kw">is</span> fast:           <span class="cm"># they met → must be inside a cycle</span>
+            <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">return</span> <span class="kw">False</span>                <span class="cm"># fast hit the end → no cycle</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — fast pointer bounds the loop &nbsp;·&nbsp; <strong>Space:</strong> O(1) — just two pointers, no visited set</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/linked-list-cycle/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -299,6 +341,20 @@ cur = head
         <summary>Show hint</summary>
         <p class="hint-body">Use two pointers both starting at a dummy head. Advance <code>fast</code> by <code>n+1</code> steps first, creating a gap. Then move both <code>fast</code> and <code>slow</code> together until <code>fast</code> is <code>None</code>. At that point, <code>slow.next</code> is the node to remove — set <code>slow.next = slow.next.next</code>.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">remove_nth_from_end</span>(head: <span class="cls">ListNode</span>, n: <span class="fn">int</span>) -> <span class="cls">ListNode</span>:
+    dummy = <span class="cls">ListNode</span>(<span class="num">0</span>, head)
+    slow = fast = dummy
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(n + <span class="num">1</span>):
+        fast = fast.next       <span class="cm"># open up an n+1 node gap</span>
+    <span class="kw">while</span> fast:                  <span class="cm"># move both until fast falls off the end</span>
+        slow = slow.next
+        fast = fast.next
+    slow.next = slow.next.next  <span class="cm"># slow now sits right before the target — skip it</span>
+    <span class="kw">return</span> dummy.next</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — single pass, no need to first count list length &nbsp;·&nbsp; <strong>Space:</strong> O(1)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/" target="_blank">Open on LeetCode ↗</a>
   </div>
