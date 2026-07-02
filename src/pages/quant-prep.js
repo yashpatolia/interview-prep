@@ -21,7 +21,7 @@ export function render() {
     </div>
 
     <div class="chapter-item">
-      <a class="chapter">
+      <a class="chapter" href="/quant/expected-value">
         <span class="chapter-num">II</span>
         <div class="chapter-body">
           <h3>Expected Value &amp; EV Puzzles</h3>
@@ -31,7 +31,7 @@ export function render() {
     </div>
 
     <div class="chapter-item">
-      <a class="chapter">
+      <a class="chapter" href="/quant/distributions">
         <span class="chapter-num">III</span>
         <div class="chapter-body">
           <h3>Distributions You Must Know</h3>
@@ -41,7 +41,7 @@ export function render() {
     </div>
 
     <div class="chapter-item">
-      <a class="chapter">
+      <a class="chapter" href="/quant/brainteasers">
         <span class="chapter-num">IV</span>
         <div class="chapter-body">
           <h3>Brainteasers &amp; Logic Puzzles</h3>
@@ -51,7 +51,7 @@ export function render() {
     </div>
 
     <div class="chapter-item">
-      <a class="chapter">
+      <a class="chapter" href="/quant/mental-math">
         <span class="chapter-num">V</span>
         <div class="chapter-body">
           <h3>Mental Math &amp; Estimation</h3>
@@ -61,7 +61,7 @@ export function render() {
     </div>
 
     <div class="chapter-item">
-      <a class="chapter">
+      <a class="chapter" href="/quant/market-making">
         <span class="chapter-num">VI</span>
         <div class="chapter-body">
           <h3>Market Making &amp; Bid-Ask Spread</h3>
@@ -71,7 +71,7 @@ export function render() {
     </div>
 
     <div class="chapter-item">
-      <a class="chapter">
+      <a class="chapter" href="/quant/options">
         <span class="chapter-num">VII</span>
         <div class="chapter-body">
           <h3>Options &amp; Derivatives Intuition</h3>
@@ -81,7 +81,7 @@ export function render() {
     </div>
 
     <div class="chapter-item">
-      <a class="chapter">
+      <a class="chapter" href="/quant/game-theory">
         <span class="chapter-num">VIII</span>
         <div class="chapter-body">
           <h3>Game Theory &amp; Auctions</h3>

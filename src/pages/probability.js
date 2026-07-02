@@ -299,6 +299,10 @@ favorable = comb(<span class="num">6</span>, <span class="num">2</span>) * comb(
     <div class="callout-title">How to practice</div>
     Talk through your reasoning <strong>out loud</strong> as if in an interview — quant interviewers grade the structure of your thinking as much as the final number. Start with Committee Selection and the Two Children Problem, then share your reasoning here before we unlock Chapter 2: Expected Value.
   </div>
+
+  <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; align-items: center;">
+    <a href="/quant/expected-value" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Expected Value →</a>
+  </div>
 </article>
 `
 }

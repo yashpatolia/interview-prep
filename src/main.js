@@ -2,6 +2,13 @@ import './style.css'
 import { render as renderLanding } from './pages/landing.js'
 import { render as renderQuant } from './pages/quant-prep.js'
 import { render as renderProbability, init as initProbability } from './pages/probability.js'
+import { render as renderExpectedValue, init as initExpectedValue } from './pages/expected-value.js'
+import { render as renderDistributions, init as initDistributions } from './pages/distributions.js'
+import { render as renderBrainteasers, init as initBrainteasers } from './pages/brainteasers.js'
+import { render as renderMentalMath, init as initMentalMath } from './pages/mental-math.js'
+import { render as renderMarketMaking, init as initMarketMaking } from './pages/market-making.js'
+import { render as renderOptions, init as initOptions } from './pages/options.js'
+import { render as renderGameTheory, init as initGameTheory } from './pages/game-theory.js'
 import { render as renderHome } from './pages/home.js'
 import { render as renderArrays, init as initArrays } from './pages/arrays.js'
 import { render as renderTwoPointers, init as initTwoPointers } from './pages/two-pointers.js'
@@ -19,6 +26,13 @@ const routes = {
   '/': { render: renderLanding, title: 'Interview Prep Hub' },
   '/quant': { render: renderQuant, title: 'Quant Trading — Interview Prep Hub' },
   '/quant/probability': { render: renderProbability, init: initProbability, title: 'Probability & Combinatorics — Quant Trading' },
+  '/quant/expected-value': { render: renderExpectedValue, init: initExpectedValue, title: 'Expected Value — Quant Trading' },
+  '/quant/distributions': { render: renderDistributions, init: initDistributions, title: 'Distributions — Quant Trading' },
+  '/quant/brainteasers': { render: renderBrainteasers, init: initBrainteasers, title: 'Brainteasers & Logic Puzzles — Quant Trading' },
+  '/quant/mental-math': { render: renderMentalMath, init: initMentalMath, title: 'Mental Math & Estimation — Quant Trading' },
+  '/quant/market-making': { render: renderMarketMaking, init: initMarketMaking, title: 'Market Making & Bid-Ask Spread — Quant Trading' },
+  '/quant/options': { render: renderOptions, init: initOptions, title: 'Options & Derivatives — Quant Trading' },
+  '/quant/game-theory': { render: renderGameTheory, init: initGameTheory, title: 'Game Theory & Auctions — Quant Trading' },
   '/dsa': { render: renderHome, title: 'Data Structures & Algorithms' },
   '/dsa/arrays': { render: renderArrays, init: initArrays, title: 'Arrays & Hashing — DSA Journal' },
   '/dsa/two-pointers': { render: renderTwoPointers, init: initTwoPointers, title: 'Two Pointers — DSA Journal' },
