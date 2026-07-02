@@ -281,6 +281,21 @@ nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num
         <summary>Show hint</summary>
         <p class="hint-body">Classic template. Use <code>while L &lt;= R</code>, <code>mid = L + (R-L)//2</code>. If <code>nums[mid] == target</code> return mid. If less, move L up. If greater, move R down.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">search</span>(nums: <span class="fn">list</span>[<span class="fn">int</span>], target: <span class="fn">int</span>) -> <span class="fn">int</span>:
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(nums) - <span class="num">1</span>
+    <span class="kw">while</span> left &lt;= right:
+        mid = left + (right - left) // <span class="num">2</span>   <span class="cm"># avoids overflow vs (left+right)//2</span>
+        <span class="kw">if</span> nums[mid] == target:
+            <span class="kw">return</span> mid
+        <span class="kw">elif</span> nums[mid] &lt; target:
+            left = mid + <span class="num">1</span>      <span class="cm"># target is in the right half</span>
+        <span class="kw">else</span>:
+            right = mid - <span class="num">1</span>     <span class="cm"># target is in the left half</span>
+    <span class="kw">return</span> -<span class="num">1</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(log n) — search space halves each step &nbsp;·&nbsp; <strong>Space:</strong> O(1)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/binary-search/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -298,6 +313,23 @@ nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num
         <summary>Show hint</summary>
         <p class="hint-body">Treat the whole matrix as a 1D sorted array of <code>m × n</code> elements. For index <code>mid</code>: <code>row = mid // cols</code>, <code>col = mid % cols</code>. Run standard binary search on indices 0 to m*n-1.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">search_matrix</span>(matrix: <span class="fn">list</span>[<span class="fn">list</span>[<span class="fn">int</span>]], target: <span class="fn">int</span>) -> <span class="fn">bool</span>:
+    rows, cols = <span class="fn">len</span>(matrix), <span class="fn">len</span>(matrix[<span class="num">0</span>])
+    left, right = <span class="num">0</span>, rows * cols - <span class="num">1</span>
+    <span class="kw">while</span> left &lt;= right:
+        mid = left + (right - left) // <span class="num">2</span>
+        val = matrix[mid // cols][mid % cols]   <span class="cm"># map 1D index back to (row, col)</span>
+        <span class="kw">if</span> val == target:
+            <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">elif</span> val &lt; target:
+            left = mid + <span class="num">1</span>
+        <span class="kw">else</span>:
+            right = mid - <span class="num">1</span>
+    <span class="kw">return</span> <span class="kw">False</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(log(m·n)) — single binary search over the flattened matrix &nbsp;·&nbsp; <strong>Space:</strong> O(1)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/search-a-2d-matrix/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -315,6 +347,19 @@ nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num
         <summary>Show hint</summary>
         <p class="hint-body">The minimum is at the inflection point. If <code>nums[mid] &gt; nums[R]</code>, the minimum is in the right half — set <code>L = mid + 1</code>. Otherwise set <code>R = mid</code> (mid might itself be the minimum). Stop when <code>L == R</code>.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">find_min</span>(nums: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">int</span>:
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(nums) - <span class="num">1</span>
+    <span class="kw">while</span> left &lt; right:
+        mid = left + (right - left) // <span class="num">2</span>
+        <span class="kw">if</span> nums[mid] &gt; nums[right]:
+            left = mid + <span class="num">1</span>    <span class="cm"># inflection point is to the right of mid</span>
+        <span class="kw">else</span>:
+            right = mid          <span class="cm"># mid could itself be the minimum, keep it in range</span>
+    <span class="kw">return</span> nums[left]            <span class="cm"># loop ends when left == right == min's index</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(log n) &nbsp;·&nbsp; <strong>Space:</strong> O(1)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -332,6 +377,27 @@ nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num
         <summary>Show hint</summary>
         <p class="hint-body">At each step, one half is always sorted. Check if the target falls within the sorted half — if so, search there. Otherwise search the other half. Two if-branches: one for "left half is sorted", one for "right half is sorted".</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">search_rotated</span>(nums: <span class="fn">list</span>[<span class="fn">int</span>], target: <span class="fn">int</span>) -> <span class="fn">int</span>:
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(nums) - <span class="num">1</span>
+    <span class="kw">while</span> left &lt;= right:
+        mid = left + (right - left) // <span class="num">2</span>
+        <span class="kw">if</span> nums[mid] == target:
+            <span class="kw">return</span> mid
+        <span class="kw">if</span> nums[left] &lt;= nums[mid]:        <span class="cm"># left half is sorted</span>
+            <span class="kw">if</span> nums[left] &lt;= target &lt; nums[mid]:
+                right = mid - <span class="num">1</span>          <span class="cm"># target in sorted left half</span>
+            <span class="kw">else</span>:
+                left = mid + <span class="num">1</span>           <span class="cm"># target must be in the right half</span>
+        <span class="kw">else</span>:                               <span class="cm"># right half is sorted</span>
+            <span class="kw">if</span> nums[mid] &lt; target &lt;= nums[right]:
+                left = mid + <span class="num">1</span>           <span class="cm"># target in sorted right half</span>
+            <span class="kw">else</span>:
+                right = mid - <span class="num">1</span>          <span class="cm"># target must be in the left half</span>
+    <span class="kw">return</span> -<span class="num">1</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(log n) — halves the search space every iteration &nbsp;·&nbsp; <strong>Space:</strong> O(1)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank">Open on LeetCode ↗</a>
   </div>

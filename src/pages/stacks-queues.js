@@ -204,6 +204,21 @@ served = q.popleft()   <span class="cm"># 'Alice'</span>
         <summary>Show hint</summary>
         <p class="hint-body">Push every opening bracket onto the stack. For every closing bracket, check if the top of the stack is the matching opener — use a dict <code>{')':'(', '}':'{', ']':'['}</code>. If the stack is empty at the end, valid.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">is_valid</span>(s: <span class="fn">str</span>) -> <span class="fn">bool</span>:
+    pairs = {<span class="st">')'</span>: <span class="st">'('</span>, <span class="st">'}'</span>: <span class="st">'{'</span>, <span class="st">']'</span>: <span class="st">'['</span>}
+    stack = []
+    <span class="kw">for</span> ch <span class="kw">in</span> s:
+        <span class="kw">if</span> ch <span class="kw">in</span> pairs:               <span class="cm"># closing bracket</span>
+            <span class="kw">if</span> <span class="kw">not</span> stack <span class="kw">or</span> stack[-<span class="num">1</span>] != pairs[ch]:
+                <span class="kw">return</span> <span class="kw">False</span>        <span class="cm"># empty stack or mismatched opener</span>
+            stack.pop()
+        <span class="kw">else</span>:
+            stack.append(ch)        <span class="cm"># opening bracket — remember it</span>
+    <span class="kw">return</span> <span class="kw">not</span> stack            <span class="cm"># valid only if every opener was matched</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — one pass through the string &nbsp;·&nbsp; <strong>Space:</strong> O(n) — stack can hold up to n openers</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/valid-parentheses/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -220,6 +235,29 @@ served = q.popleft()   <span class="cm"># 'Alice'</span>
         <summary>Show hint</summary>
         <p class="hint-body">Use <strong>two stacks</strong>: a normal one and a parallel "min stack." Each time you push a value, also push <code>min(val, min_stack[-1])</code> onto the min stack. When you pop, pop both. <code>getMin()</code> is just <code>min_stack[-1]</code>.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">class</span> <span class="cls">MinStack</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.stack = []
+        self.min_stack = []      <span class="cm"># min_stack[i] = min of stack[0..i]</span>
+
+    <span class="kw">def</span> <span class="fn">push</span>(self, val: <span class="fn">int</span>) -> <span class="kw">None</span>:
+        self.stack.append(val)
+        cur_min = <span class="fn">min</span>(val, self.min_stack[-<span class="num">1</span>]) <span class="kw">if</span> self.min_stack <span class="kw">else</span> val
+        self.min_stack.append(cur_min)   <span class="cm"># track running min alongside</span>
+
+    <span class="kw">def</span> <span class="fn">pop</span>(self) -> <span class="kw">None</span>:
+        self.stack.pop()
+        self.min_stack.pop()      <span class="cm"># keep both stacks in sync</span>
+
+    <span class="kw">def</span> <span class="fn">top</span>(self) -> <span class="fn">int</span>:
+        <span class="kw">return</span> self.stack[-<span class="num">1</span>]
+
+    <span class="kw">def</span> <span class="fn">get_min</span>(self) -> <span class="fn">int</span>:
+        <span class="kw">return</span> self.min_stack[-<span class="num">1</span>]   <span class="cm"># O(1) — no scanning needed</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(1) for every operation &nbsp;·&nbsp; <strong>Space:</strong> O(n) — second stack mirrors the first</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/min-stack/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -238,6 +276,19 @@ served = q.popleft()   <span class="cm"># 'Alice'</span>
         <summary>Show hint</summary>
         <p class="hint-body">Use a monotonic decreasing stack of <em>indices</em>. For each temperature, pop indices where the stored temperature is lower than the current — the wait time is <code>i - popped_index</code>.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">daily_temperatures</span>(temps: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">list</span>[<span class="fn">int</span>]:
+    res = [<span class="num">0</span>] * <span class="fn">len</span>(temps)
+    stack = []                  <span class="cm"># holds indices, temps[stack] is decreasing</span>
+    <span class="kw">for</span> i, t <span class="kw">in</span> <span class="fn">enumerate</span>(temps):
+        <span class="kw">while</span> stack <span class="kw">and</span> temps[stack[-<span class="num">1</span>]] &lt; t:
+            prev_i = stack.pop()
+            res[prev_i] = i - prev_i   <span class="cm"># found the next warmer day for prev_i</span>
+        stack.append(i)
+    <span class="kw">return</span> res                  <span class="cm"># indices left on stack never found a warmer day (stay 0)</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — each index is pushed and popped at most once &nbsp;·&nbsp; <strong>Space:</strong> O(n) — stack in the worst case (strictly decreasing temps)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/daily-temperatures/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -254,6 +305,23 @@ served = q.popleft()   <span class="cm"># 'Alice'</span>
         <summary>Show hint</summary>
         <p class="hint-body">Use a monotonic <em>increasing</em> stack of indices. When you encounter a bar shorter than the stack's top, start popping — each popped bar can extend leftward to where it was pushed and rightward to the current index. Track the max area. Don't forget to drain the stack at the end using a sentinel height of 0.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">largest_rectangle_area</span>(heights: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">int</span>:
+    stack = []        <span class="cm"># pairs of (start_index, height), heights kept increasing</span>
+    best = <span class="num">0</span>
+    <span class="kw">for</span> i, h <span class="kw">in</span> <span class="fn">enumerate</span>(heights):
+        start = i
+        <span class="kw">while</span> stack <span class="kw">and</span> stack[-<span class="num">1</span>][<span class="num">1</span>] &gt; h:
+            idx, height = stack.pop()    <span class="cm"># this bar can't extend past i — close it off</span>
+            best = <span class="fn">max</span>(best, height * (i - idx))
+            start = idx                  <span class="cm"># merge: current bar can extend back to idx</span>
+        stack.append((start, h))
+    <span class="kw">for</span> idx, height <span class="kw">in</span> stack:        <span class="cm"># drain remaining bars, each extends to the end</span>
+        best = <span class="fn">max</span>(best, height * (<span class="fn">len</span>(heights) - idx))
+    <span class="kw">return</span> best</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — each bar is pushed and popped at most once &nbsp;·&nbsp; <strong>Space:</strong> O(n) — stack in the worst case (strictly increasing heights)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/largest-rectangle-in-histogram/" target="_blank">Open on LeetCode ↗</a>
   </div>

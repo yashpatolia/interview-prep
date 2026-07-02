@@ -298,6 +298,32 @@ uf = <span class="cls">UnionFind</span>(<span class="num">5</span>)
         <summary>Show hint</summary>
         <p class="hint-body">Iterate every cell. When you find an unvisited '1', run DFS/BFS to mark the entire island as visited (set cells to '0' or add to a visited set). Count how many times you start a new DFS — that's your island count.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">num_islands</span>(grid: <span class="fn">list</span>[<span class="fn">list</span>[<span class="fn">str</span>]]) -> <span class="fn">int</span>:
+    rows, cols = <span class="fn">len</span>(grid), <span class="fn">len</span>(grid[<span class="num">0</span>])
+    visited = <span class="fn">set</span>()
+
+    <span class="kw">def</span> <span class="fn">dfs</span>(r, c):
+        <span class="kw">if</span> (
+            r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span>
+            c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols <span class="kw">or</span>
+            grid[r][c] == <span class="st">"0"</span> <span class="kw">or</span> (r, c) <span class="kw">in</span> visited
+        ):
+            <span class="kw">return</span>
+        visited.add((r, c))            <span class="cm"># mark this land cell as part of the current island</span>
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(<span class="num">1</span>,<span class="num">0</span>), (-<span class="num">1</span>,<span class="num">0</span>), (<span class="num">0</span>,<span class="num">1</span>), (<span class="num">0</span>,-<span class="num">1</span>)]:
+            dfs(r + dr, c + dc)        <span class="cm"># flood-fill into the 4 neighbours</span>
+
+    islands = <span class="num">0</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+            <span class="kw">if</span> grid[r][c] == <span class="st">"1"</span> <span class="kw">and</span> (r, c) <span class="kw">not</span> <span class="kw">in</span> visited:
+                islands += <span class="num">1</span>          <span class="cm"># found a new, unvisited island</span>
+                dfs(r, c)               <span class="cm"># sink the whole island into visited</span>
+    <span class="kw">return</span> islands</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(m·n) — every cell visited once &nbsp;·&nbsp; <strong>Space:</strong> O(m·n) — visited set + recursion stack worst case</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/number-of-islands/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -315,6 +341,28 @@ uf = <span class="cls">UnionFind</span>(<span class="num">5</span>)
         <summary>Show hint</summary>
         <p class="hint-body">BFS from the given node. Maintain a hash map <code>original → clone</code>. For each node you dequeue, clone its neighbours (if not yet cloned) and wire up the edges on the cloned side.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">clone_graph</span>(node: <span class="st">'Node'</span>) -> <span class="st">'Node'</span>:
+    <span class="kw">if</span> <span class="kw">not</span> node:
+        <span class="kw">return</span> <span class="kw">None</span>
+
+    clones = {node: <span class="cls">Node</span>(node.val)}   <span class="cm"># original → clone map</span>
+    queue = deque([node])
+
+    <span class="kw">while</span> queue:
+        cur = queue.popleft()
+        <span class="kw">for</span> neighbor <span class="kw">in</span> cur.neighbors:
+            <span class="kw">if</span> neighbor <span class="kw">not</span> <span class="kw">in</span> clones:
+                clones[neighbor] = <span class="cls">Node</span>(neighbor.val)  <span class="cm"># clone on first sight</span>
+                queue.append(neighbor)
+            clones[cur].neighbors.append(clones[neighbor])  <span class="cm"># wire up the cloned edge</span>
+
+    <span class="kw">return</span> clones[node]</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(V + E) — every node and edge processed once &nbsp;·&nbsp; <strong>Space:</strong> O(V) — clone map + queue</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/clone-graph/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -332,6 +380,33 @@ uf = <span class="cls">UnionFind</span>(<span class="num">5</span>)
         <summary>Show hint</summary>
         <p class="hint-body">Build a directed graph. The problem reduces to: does this directed graph have a cycle? Run DFS; track nodes in the <em>current recursion path</em> (a separate "in-progress" set). If you revisit a node that's still in-progress, there's a cycle.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">can_finish</span>(num_courses: <span class="fn">int</span>, prerequisites: <span class="fn">list</span>[<span class="fn">list</span>[<span class="fn">int</span>]]) -> <span class="fn">bool</span>:
+    graph = {i: [] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(num_courses)}
+    <span class="kw">for</span> course, pre <span class="kw">in</span> prerequisites:
+        graph[course].append(pre)     <span class="cm"># course depends on pre</span>
+
+    in_progress = <span class="fn">set</span>()    <span class="cm"># nodes on the current DFS path — a cycle if revisited</span>
+    visited = <span class="fn">set</span>()       <span class="cm"># fully processed nodes — safe to skip</span>
+
+    <span class="kw">def</span> <span class="fn">has_cycle</span>(course):
+        <span class="kw">if</span> course <span class="kw">in</span> in_progress:
+            <span class="kw">return</span> <span class="kw">True</span>          <span class="cm"># revisited a node still on the path → cycle</span>
+        <span class="kw">if</span> course <span class="kw">in</span> visited:
+            <span class="kw">return</span> <span class="kw">False</span>         <span class="cm"># already proven cycle-free</span>
+
+        in_progress.add(course)
+        <span class="kw">for</span> pre <span class="kw">in</span> graph[course]:
+            <span class="kw">if</span> <span class="fn">has_cycle</span>(pre):
+                <span class="kw">return</span> <span class="kw">True</span>
+        in_progress.remove(course)
+        visited.add(course)
+        <span class="kw">return</span> <span class="kw">False</span>
+
+    <span class="kw">return</span> <span class="kw">not</span> <span class="fn">any</span>(<span class="fn">has_cycle</span>(c) <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(num_courses))</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(V + E) — each course and prerequisite edge visited once &nbsp;·&nbsp; <strong>Space:</strong> O(V + E) — graph + recursion stack</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/course-schedule/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -348,6 +423,34 @@ uf = <span class="cls">UnionFind</span>(<span class="num">5</span>)
         <summary>Show hint</summary>
         <p class="hint-body">Instead of simulating water flowing down, reverse it — do BFS/DFS <em>uphill</em> from each ocean's border. Find all cells reachable from the Pacific border, then all cells reachable from the Atlantic border. The intersection is your answer.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">pacific_atlantic</span>(heights: <span class="fn">list</span>[<span class="fn">list</span>[<span class="fn">int</span>]]) -> <span class="fn">list</span>[<span class="fn">list</span>[<span class="fn">int</span>]]:
+    <span class="kw">if</span> <span class="kw">not</span> heights:
+        <span class="kw">return</span> []
+    rows, cols = <span class="fn">len</span>(heights), <span class="fn">len</span>(heights[<span class="num">0</span>])
+    pacific, atlantic = <span class="fn">set</span>(), <span class="fn">set</span>()
+
+    <span class="kw">def</span> <span class="fn">dfs</span>(r, c, visited, prev_height):
+        <span class="kw">if</span> (
+            r &lt; <span class="num">0</span> <span class="kw">or</span> r &gt;= rows <span class="kw">or</span> c &lt; <span class="num">0</span> <span class="kw">or</span> c &gt;= cols <span class="kw">or</span>
+            (r, c) <span class="kw">in</span> visited <span class="kw">or</span> heights[r][c] &lt; prev_height
+        ):
+            <span class="kw">return</span>                       <span class="cm"># can't flow uphill into a lower cell from here</span>
+        visited.add((r, c))
+        <span class="kw">for</span> dr, dc <span class="kw">in</span> [(<span class="num">1</span>,<span class="num">0</span>), (-<span class="num">1</span>,<span class="num">0</span>), (<span class="num">0</span>,<span class="num">1</span>), (<span class="num">0</span>,-<span class="num">1</span>)]:
+            dfs(r + dr, c + dc, visited, heights[r][c])
+
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(cols):
+        dfs(<span class="num">0</span>, c, pacific, heights[<span class="num">0</span>][c])         <span class="cm"># top border → Pacific</span>
+        dfs(rows - <span class="num">1</span>, c, atlantic, heights[rows - <span class="num">1</span>][c])  <span class="cm"># bottom border → Atlantic</span>
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(rows):
+        dfs(r, <span class="num">0</span>, pacific, heights[r][<span class="num">0</span>])         <span class="cm"># left border → Pacific</span>
+        dfs(r, cols - <span class="num">1</span>, atlantic, heights[r][cols - <span class="num">1</span>])  <span class="cm"># right border → Atlantic</span>
+
+    <span class="kw">return</span> [<span class="fn">list</span>(cell) <span class="kw">for</span> cell <span class="kw">in</span> pacific &amp; atlantic]  <span class="cm"># reachable from both oceans</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(m·n) — 4 border DFS sweeps, each visiting cells at most once &nbsp;·&nbsp; <strong>Space:</strong> O(m·n) — two visited sets + recursion stack</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/pacific-atlantic-water-flow/" target="_blank">Open on LeetCode ↗</a>
   </div>

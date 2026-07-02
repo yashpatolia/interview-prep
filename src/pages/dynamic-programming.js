@@ -179,6 +179,17 @@ export function render() {
         <summary>Show hint</summary>
         <p class="hint-body">State: <code>dp[i]</code> = ways to reach step i. Recurrence: <code>dp[i] = dp[i-1] + dp[i-2]</code>. Base cases: <code>dp[1] = 1</code>, <code>dp[2] = 2</code>. This is Fibonacci in disguise.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">climb_stairs</span>(n: <span class="fn">int</span>) -> <span class="fn">int</span>:
+    <span class="kw">if</span> n &lt;= <span class="num">2</span>:
+        <span class="kw">return</span> n
+    prev2, prev1 = <span class="num">1</span>, <span class="num">2</span>     <span class="cm"># ways(1)=1, ways(2)=2</span>
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>, n + <span class="num">1</span>):
+        prev2, prev1 = prev1, prev1 + prev2  <span class="cm"># dp[i] = dp[i-1] + dp[i-2]</span>
+    <span class="kw">return</span> prev1</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — one pass to step n &nbsp;·&nbsp; <strong>Space:</strong> O(1) — only last two states kept (rolling DP)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/climbing-stairs/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -196,6 +207,16 @@ export function render() {
         <summary>Show hint</summary>
         <p class="hint-body">State: <code>dp[i]</code> = max money robbing from house 0 through i. Recurrence: <code>dp[i] = max(dp[i-1], dp[i-2] + nums[i])</code> — either skip this house or rob it (and skip the previous one).</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">rob</span>(nums: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">int</span>:
+    prev2, prev1 = <span class="num">0</span>, <span class="num">0</span>     <span class="cm"># best money robbing up to 2-ago / 1-ago house</span>
+    <span class="kw">for</span> num <span class="kw">in</span> nums:
+        cur = <span class="fn">max</span>(prev1, prev2 + num)  <span class="cm"># skip this house, or rob it + best 2 houses back</span>
+        prev2, prev1 = prev1, cur
+    <span class="kw">return</span> prev1</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — single pass &nbsp;·&nbsp; <strong>Space:</strong> O(1) — rolling DP, no full array needed</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/house-robber/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -213,6 +234,18 @@ export function render() {
         <summary>Show hint</summary>
         <p class="hint-body">State: <code>dp[i]</code> = length of the longest increasing subsequence <em>ending at index i</em>. Recurrence: for each <code>j &lt; i</code>, if <code>nums[j] &lt; nums[i]</code> then <code>dp[i] = max(dp[i], dp[j] + 1)</code>. Base case: every element alone is a subsequence of length 1, so initialise all <code>dp[i] = 1</code>.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="cm"># O(n^2) DP — clean and the expected solution at this stage</span>
+<span class="kw">def</span> <span class="fn">length_of_lis</span>(nums: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">int</span>:
+    dp = [<span class="num">1</span>] * <span class="fn">len</span>(nums)        <span class="cm"># every element alone is a subsequence of length 1</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(nums)):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i):
+            <span class="kw">if</span> nums[j] &lt; nums[i]:
+                dp[i] = <span class="fn">max</span>(dp[i], dp[j] + <span class="num">1</span>)  <span class="cm"># extend the LIS ending at j</span>
+    <span class="kw">return</span> <span class="fn">max</span>(dp) <span class="kw">if</span> dp <span class="kw">else</span> <span class="num">0</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n²) — nested loop over all pairs &nbsp;·&nbsp; <strong>Space:</strong> O(n) — dp array (can be optimized to O(n log n) with binary search, but this is the standard DP solution)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -230,6 +263,22 @@ export function render() {
         <summary>Show hint</summary>
         <p class="hint-body">Use a 2D dp table where <code>dp[i][j]</code> = LCS length of the first i characters of text1 and first j characters of text2. Recurrence: if <code>text1[i-1] == text2[j-1]</code> then <code>dp[i][j] = dp[i-1][j-1] + 1</code>, else <code>dp[i][j] = max(dp[i-1][j], dp[i][j-1])</code>. Fill row by row from top-left to bottom-right.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">longest_common_subsequence</span>(text1: <span class="fn">str</span>, text2: <span class="fn">str</span>) -> <span class="fn">int</span>:
+    m, n = <span class="fn">len</span>(text1), <span class="fn">len</span>(text2)
+    dp = [[<span class="num">0</span>] * (n + <span class="num">1</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(m + <span class="num">1</span>)]  <span class="cm"># dp[i][j]: LCS of text1[:i], text2[:j]</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, m + <span class="num">1</span>):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n + <span class="num">1</span>):
+            <span class="kw">if</span> text1[i - <span class="num">1</span>] == text2[j - <span class="num">1</span>]:
+                dp[i][j] = dp[i - <span class="num">1</span>][j - <span class="num">1</span>] + <span class="num">1</span>  <span class="cm"># chars match — extend the LCS</span>
+            <span class="kw">else</span>:
+                dp[i][j] = <span class="fn">max</span>(dp[i - <span class="num">1</span>][j], dp[i][j - <span class="num">1</span>])  <span class="cm"># drop one char from either string</span>
+
+    <span class="kw">return</span> dp[m][n]</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(m·n) — fills an m×n table &nbsp;·&nbsp; <strong>Space:</strong> O(m·n) — full DP table (can reduce to O(min(m,n)) with row rolling)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank">Open on LeetCode ↗</a>
   </div>

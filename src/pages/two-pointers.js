@@ -208,6 +208,23 @@ k = <span class="fn">remove_duplicates</span>(arr)
         <summary>Show hint</summary>
         <p class="hint-body">Place L at index 0 and R at the last index. Skip characters where <code>not ch.isalnum()</code> by advancing the pointer without comparing. When both pointers sit on alphanumeric characters, compare <code>s[L].lower()</code> vs <code>s[R].lower()</code>.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">is_palindrome</span>(s: <span class="fn">str</span>) -> <span class="fn">bool</span>:
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(s) - <span class="num">1</span>
+    <span class="kw">while</span> left &lt; right:
+        <span class="kw">if</span> <span class="kw">not</span> s[left].isalnum():   <span class="cm"># skip non-alphanumeric from the left</span>
+            left += <span class="num">1</span>
+        <span class="kw">elif</span> <span class="kw">not</span> s[right].isalnum(): <span class="cm"># skip non-alphanumeric from the right</span>
+            right -= <span class="num">1</span>
+        <span class="kw">elif</span> s[left].lower() != s[right].lower():
+            <span class="kw">return</span> <span class="kw">False</span>             <span class="cm"># mismatch → not a palindrome</span>
+        <span class="kw">else</span>:
+            left += <span class="num">1</span>
+            right -= <span class="num">1</span>
+    <span class="kw">return</span> <span class="kw">True</span></code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — each pointer moves through the string at most once &nbsp;·&nbsp; <strong>Space:</strong> O(1) — no extra structures</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/valid-palindrome/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -226,6 +243,21 @@ k = <span class="fn">remove_duplicates</span>(arr)
         <summary>Show hint</summary>
         <p class="hint-body">Opposite-ends template. Compute <code>sum = numbers[L] + numbers[R]</code>. If <code>sum &gt; target</code>, move R left. If <code>sum &lt; target</code>, move L right. If equal, return <code>[L+1, R+1]</code> (1-indexed).</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">two_sum_sorted</span>(numbers: <span class="fn">list</span>[<span class="fn">int</span>], target: <span class="fn">int</span>) -> <span class="fn">list</span>[<span class="fn">int</span>]:
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(numbers) - <span class="num">1</span>
+    <span class="kw">while</span> left &lt; right:
+        total = numbers[left] + numbers[right]
+        <span class="kw">if</span> total == target:
+            <span class="kw">return</span> [left + <span class="num">1</span>, right + <span class="num">1</span>]  <span class="cm"># convert to 1-indexed</span>
+        <span class="kw">elif</span> total &lt; target:
+            left += <span class="num">1</span>     <span class="cm"># sum too small → need a bigger value</span>
+        <span class="kw">else</span>:
+            right -= <span class="num">1</span>    <span class="cm"># sum too big → need a smaller value</span>
+    <span class="kw">return</span> []</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — pointers close the gap in one pass &nbsp;·&nbsp; <strong>Space:</strong> O(1)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -244,6 +276,34 @@ k = <span class="fn">remove_duplicates</span>(arr)
         <summary>Show hint</summary>
         <p class="hint-body">Sort first. Then fix one number <code>nums[i]</code> with an outer loop, and use two pointers on the remaining subarray to find pairs summing to <code>-nums[i]</code>. After finding a triplet, skip duplicate values of <code>nums[i]</code>, <code>nums[L]</code>, and <code>nums[R]</code> with <code>while</code> loops to avoid repeats.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">three_sum</span>(nums: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">list</span>[<span class="fn">list</span>[<span class="fn">int</span>]]:
+    nums.sort()              <span class="cm"># enables two-pointer scan + easy dup skipping</span>
+    res = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(nums)):
+        <span class="kw">if</span> i &gt; <span class="num">0</span> <span class="kw">and</span> nums[i] == nums[i - <span class="num">1</span>]:
+            <span class="kw">continue</span>          <span class="cm"># skip duplicate anchor values</span>
+        <span class="kw">if</span> nums[i] &gt; <span class="num">0</span>:
+            <span class="kw">break</span>             <span class="cm"># sorted + positive anchor → no triplet sums to 0</span>
+        left, right = i + <span class="num">1</span>, <span class="fn">len</span>(nums) - <span class="num">1</span>
+        <span class="kw">while</span> left &lt; right:
+            total = nums[i] + nums[left] + nums[right]
+            <span class="kw">if</span> total &lt; <span class="num">0</span>:
+                left += <span class="num">1</span>
+            <span class="kw">elif</span> total &gt; <span class="num">0</span>:
+                right -= <span class="num">1</span>
+            <span class="kw">else</span>:
+                res.append([nums[i], nums[left], nums[right]])
+                left += <span class="num">1</span>
+                right -= <span class="num">1</span>
+                <span class="kw">while</span> left &lt; right <span class="kw">and</span> nums[left] == nums[left - <span class="num">1</span>]:
+                    left += <span class="num">1</span>   <span class="cm"># skip duplicate left values</span>
+                <span class="kw">while</span> left &lt; right <span class="kw">and</span> nums[right] == nums[right + <span class="num">1</span>]:
+                    right -= <span class="num">1</span>  <span class="cm"># skip duplicate right values</span>
+    <span class="kw">return</span> res</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n²) — sort O(n log n) + outer loop × inner two-pointer scan &nbsp;·&nbsp; <strong>Space:</strong> O(1) extra (excluding output / sort space)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/3sum/" target="_blank">Open on LeetCode ↗</a>
   </div>
@@ -262,6 +322,21 @@ k = <span class="fn">remove_duplicates</span>(arr)
         <summary>Show hint</summary>
         <p class="hint-body">Start with L=0, R=last. Area = <code>min(height[L], height[R]) * (R - L)</code>. Always move the pointer pointing to the <em>shorter wall</em> inward — moving the taller wall can only decrease or maintain the minimum height, never help. Keep track of the maximum area seen.</p>
         </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <pre><code><span class="kw">def</span> <span class="fn">max_area</span>(height: <span class="fn">list</span>[<span class="fn">int</span>]) -> <span class="fn">int</span>:
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(height) - <span class="num">1</span>
+    best = <span class="num">0</span>
+    <span class="kw">while</span> left &lt; right:
+        area = <span class="fn">min</span>(height[left], height[right]) * (right - left)
+        best = <span class="fn">max</span>(best, area)
+        <span class="kw">if</span> height[left] &lt; height[right]:
+            left += <span class="num">1</span>      <span class="cm"># shorter wall is the bottleneck — move it</span>
+        <span class="kw">else</span>:
+            right -= <span class="num">1</span>
+    <span class="kw">return</span> best</code></pre>
+        <p class="complexity-line"><strong>Time:</strong> O(n) — pointers move inward, never apart &nbsp;·&nbsp; <strong>Space:</strong> O(1)</p>
+      </details>
     </div>
     <a class="problem-link" href="https://leetcode.com/problems/container-with-most-water/" target="_blank">Open on LeetCode ↗</a>
   </div>
