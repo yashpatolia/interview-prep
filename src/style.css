@@ -76,15 +76,49 @@ nav .current { color: var(--ink); font-weight: 600; }
 .toc a:hover,
 .toc a.active { color: var(--ink); border-left-color: var(--accent); }
 
+/* ── Sidebar (chapter nav) ── */
+.sidebar {
+  position: fixed; top: 52px; left: 0; width: 240px;
+  height: calc(100vh - 52px); overflow-y: auto;
+  padding: 1.5rem 1.25rem;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+.sidebar-back {
+  display: block; font-family: var(--font-display); font-size: 0.8rem;
+  color: var(--muted); text-decoration: none; margin-bottom: 1.5rem;
+  transition: color 0.15s;
+}
+.sidebar-back:hover { color: var(--ink); }
+.sidebar h4 {
+  font-family: var(--font-display);
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--muted); margin-bottom: 0.875rem; font-weight: 600;
+}
+.sidebar-link {
+  display: block; font-size: 0.8rem; color: var(--muted);
+  text-decoration: none; padding: 0.4rem 0.6rem;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s; line-height: 1.4;
+  font-family: var(--font-display);
+}
+.sidebar-link:hover,
+.sidebar-link.active { color: var(--ink); border-left-color: var(--accent); }
+
 /* ── Article (lesson page) ── */
 article {
-  max-width: 780px;
+  max-width: clamp(780px, 72vw, 1200px);
   margin: 0 auto;
   padding: 3rem 2.5rem 6rem;
   margin-right: 220px;
   background: var(--surface);
   min-height: 100vh;
   box-shadow: 1px 0 0 var(--border), -1px 0 0 var(--border);
+}
+body:has(.sidebar) article {
+  margin-left: 240px;
+  margin-right: 220px;
+  width: calc(100% - 460px);
 }
 
 /* ── Typography ── */
@@ -568,7 +602,8 @@ footer {
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .toc { display: none; }
+  .toc, .sidebar { display: none; }
+  body:has(.sidebar) article { margin-left: 0; width: auto; }
   article { margin-right: 0; }
 }
 @media (max-width: 600px) {

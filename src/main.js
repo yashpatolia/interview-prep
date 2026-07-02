@@ -60,11 +60,27 @@ function renderNavbar(path) {
 </nav>`
 }
 
+function renderSidebar(path) {
+  const prefix = path.startsWith('/dsa/') ? '/dsa' : path.startsWith('/quant/') ? '/quant' : null
+  if (!prefix) return ''
+  const hubTitle = prefix === '/dsa' ? 'DSA' : 'Quant Trading'
+  const links = Object.entries(routes)
+    .filter(([p]) => p.startsWith(prefix + '/'))
+    .map(([p, r]) => `<a class="sidebar-link${p === path ? ' active' : ''}" href="${p}">${r.title}</a>`)
+    .join('')
+  return `
+<div class="sidebar">
+  <a class="sidebar-back" href="${prefix}">← ${hubTitle}</a>
+  <h4>Chapters</h4>
+  ${links}
+</div>`
+}
+
 function route() {
   const path = location.pathname
   const page = routes[path] ?? routes['/']
   document.title = page.title
-  document.getElementById('app').innerHTML = renderNavbar(path) + page.render()
+  document.getElementById('app').innerHTML = renderNavbar(path) + renderSidebar(path) + page.render()
   page.init?.()
   if (!location.hash) window.scrollTo(0, 0)
   initTOC()
