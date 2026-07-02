@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Arrays &amp; Hashing</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#what-is-array">What is an Array?</a>
@@ -360,8 +354,8 @@ seen.<span class="fn">add</span>(<span class="num">5</span>)
   </div>
 
   <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-    <a href="/" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Back to Home</a>
-    <a href="/two-pointers" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Two Pointers →</a>
+    <a href="/dsa" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Back to Home</a>
+    <a href="/dsa/two-pointers" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Two Pointers →</a>
   </div>
 </article>
 `

@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Trees &amp; BFS/DFS</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#what">What is a Tree?</a>
@@ -392,8 +386,8 @@ result = <span class="fn">search_bst</span>(root, <span class="num">3</span>)
   </div>
 
   <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-    <a href="/binary-search" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Binary Search</a>
-    <a href="/dynamic-programming" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Dynamic Programming →</a>
+    <a href="/dsa/binary-search" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Binary Search</a>
+    <a href="/dsa/dynamic-programming" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Dynamic Programming →</a>
   </div>
 </article>
 `

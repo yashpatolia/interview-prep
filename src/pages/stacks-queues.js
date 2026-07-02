@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Stacks &amp; Queues</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#stack">The Stack (LIFO)</a>
@@ -270,8 +264,8 @@ served = q.popleft()   <span class="cm"># 'Alice'</span>
   </div>
 
   <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-    <a href="/linked-lists" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Linked Lists</a>
-    <a href="/binary-search" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Binary Search →</a>
+    <a href="/dsa/linked-lists" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Linked Lists</a>
+    <a href="/dsa/binary-search" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Binary Search →</a>
   </div>
 </article>
 `

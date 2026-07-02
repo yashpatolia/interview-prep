@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Complexity Cheat Sheet</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#big-o">Big O Basics</a>

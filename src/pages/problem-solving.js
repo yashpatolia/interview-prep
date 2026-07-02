@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">How to Solve Problems</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#process">The 6-Step Process</a>
@@ -106,22 +100,22 @@ export function render() {
     <tbody>
       <tr>
         <td>"sorted array" + "find pair / triplet / sum"</td>
-        <td><strong><a href="/two-pointers">Two Pointers</a></strong></td>
+        <td><strong><a href="/dsa/two-pointers">Two Pointers</a></strong></td>
         <td>Sorting lets you decide which pointer to move based on whether the sum is too large or too small</td>
       </tr>
       <tr>
         <td>"remove duplicates in-place" / "rewrite array without extra space"</td>
-        <td><strong><a href="/two-pointers">Two Pointers (fast/slow)</a></strong></td>
+        <td><strong><a href="/dsa/two-pointers">Two Pointers (fast/slow)</a></strong></td>
         <td>Slow pointer marks the next write position; fast pointer scans ahead</td>
       </tr>
       <tr>
         <td>"contiguous subarray" / "substring" + "maximum / minimum / exactly k"</td>
-        <td><strong><a href="/sliding-window">Sliding Window</a></strong></td>
+        <td><strong><a href="/dsa/sliding-window">Sliding Window</a></strong></td>
         <td>The answer lives inside a moving range; expand right, shrink left</td>
       </tr>
       <tr>
         <td>"find in sorted array" / "search" / "minimum that satisfies a condition"</td>
-        <td><strong><a href="/binary-search">Binary Search</a></strong></td>
+        <td><strong><a href="/dsa/binary-search">Binary Search</a></strong></td>
         <td>If you can answer "is mid a valid answer?" in O(1)–O(n), binary search the answer space</td>
       </tr>
       <tr>
@@ -131,22 +125,22 @@ export function render() {
       </tr>
       <tr>
         <td>"valid parentheses" / "matching brackets" / "undo last action" / "evaluate expression"</td>
-        <td><strong><a href="/stacks-queues">Stack</a></strong></td>
+        <td><strong><a href="/dsa/stacks-queues">Stack</a></strong></td>
         <td>Last-in-first-out naturally handles "the most recent unresolved thing"</td>
       </tr>
       <tr>
         <td>"shortest path" / "minimum steps / hops" / "level by level"</td>
-        <td><strong><a href="/trees">BFS</a></strong></td>
+        <td><strong><a href="/dsa/trees">BFS</a></strong></td>
         <td>BFS explores by distance from source — the first time you reach a node is the shortest path</td>
       </tr>
       <tr>
         <td>"all possible paths" / "generate all combinations / permutations" / "does a valid solution exist"</td>
-        <td><strong><a href="/trees">DFS / Backtracking</a></strong></td>
+        <td><strong><a href="/dsa/trees">DFS / Backtracking</a></strong></td>
         <td>Explore a decision tree: make a choice, recurse, undo it. Use BFS instead if you need the <em>shortest</em> path, not just any path.</td>
       </tr>
       <tr>
         <td>"islands" / "connected components" / "union / merge groups"</td>
-        <td><strong><a href="/graphs">BFS/DFS or Union-Find</a></strong></td>
+        <td><strong><a href="/dsa/graphs">BFS/DFS or Union-Find</a></strong></td>
         <td>Each island is a connected component; BFS/DFS floods it; Union-Find merges sets</td>
       </tr>
       <tr>
@@ -156,7 +150,7 @@ export function render() {
       </tr>
       <tr>
         <td>"how many ways" / "minimum cost" / "maximum profit" with overlapping choices</td>
-        <td><strong><a href="/dynamic-programming">Dynamic Programming</a></strong></td>
+        <td><strong><a href="/dsa/dynamic-programming">Dynamic Programming</a></strong></td>
         <td>If brute force recomputes the same subproblem from different paths, memoize it</td>
       </tr>
       <tr>
@@ -171,7 +165,7 @@ export function render() {
       </tr>
       <tr>
         <td>"course prerequisites" / "dependency order" / "can you complete all tasks"</td>
-        <td><strong><a href="/graphs">Topological Sort</a></strong></td>
+        <td><strong><a href="/dsa/graphs">Topological Sort</a></strong></td>
         <td>Directed graph where edges mean "must come before"; cycle = impossible</td>
       </tr>
     </tbody>

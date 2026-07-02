@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Sliding Window</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#idea">The Big Idea</a>
@@ -291,8 +285,8 @@ export function render() {
   </div>
 
   <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-    <a href="/two-pointers" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Two Pointers</a>
-    <a href="/linked-lists" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Linked Lists →</a>
+    <a href="/dsa/two-pointers" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Two Pointers</a>
+    <a href="/dsa/linked-lists" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Linked Lists →</a>
   </div>
 </article>
 `

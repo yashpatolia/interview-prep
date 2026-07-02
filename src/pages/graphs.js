@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Graphs</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#what">What is a Graph?</a>
@@ -364,9 +358,9 @@ uf = <span class="cls">UnionFind</span>(<span class="num">5</span>)
   </div>
 
   <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: center; align-items: center;">
-    <a href="/dynamic-programming" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Dynamic Programming</a>
+    <a href="/dsa/dynamic-programming" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Dynamic Programming</a>
     <span style="margin: 0 1rem; color: var(--border);">·</span>
-    <a href="/" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">← Back to Home</a>
+    <a href="/dsa" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">← Back to Home</a>
   </div>
 </article>
 `

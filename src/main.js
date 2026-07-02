@@ -1,4 +1,7 @@
 import './style.css'
+import { render as renderLanding } from './pages/landing.js'
+import { render as renderQuant } from './pages/quant-prep.js'
+import { render as renderProbability, init as initProbability } from './pages/probability.js'
 import { render as renderHome } from './pages/home.js'
 import { render as renderArrays, init as initArrays } from './pages/arrays.js'
 import { render as renderTwoPointers, init as initTwoPointers } from './pages/two-pointers.js'
@@ -13,25 +16,41 @@ import { render as renderComplexity, init as initComplexity } from './pages/comp
 import { render as renderProblemSolving, init as initProblemSolving } from './pages/problem-solving.js'
 
 const routes = {
-  '/':                     { render: renderHome,          title: "Yash's DSA Journal" },
-  '/arrays':               { render: renderArrays,        init: initArrays,        title: 'Arrays & Hashing — DSA Journal' },
-  '/two-pointers':         { render: renderTwoPointers,   init: initTwoPointers,   title: 'Two Pointers — DSA Journal' },
-  '/sliding-window':       { render: renderSlidingWindow, init: initSlidingWindow, title: 'Sliding Window — DSA Journal' },
-  '/linked-lists':         { render: renderLinkedLists,   init: initLinkedLists,   title: 'Linked Lists — DSA Journal' },
-  '/stacks-queues':        { render: renderStacksQueues,  init: initStacksQueues,  title: 'Stacks & Queues — DSA Journal' },
-  '/binary-search':        { render: renderBinarySearch,  init: initBinarySearch,  title: 'Binary Search — DSA Journal' },
-  '/trees':                { render: renderTrees,         init: initTrees,         title: 'Trees & BFS/DFS — DSA Journal' },
-  '/dynamic-programming':  { render: renderDP,            init: initDP,            title: 'Dynamic Programming — DSA Journal' },
-  '/graphs':               { render: renderGraphs,        init: initGraphs,        title: 'Graphs — DSA Journal' },
-  '/complexity':           { render: renderComplexity,    init: initComplexity,    title: 'Complexity Cheat Sheet — DSA Journal' },
-  '/problem-solving':      { render: renderProblemSolving, init: initProblemSolving, title: 'How to Solve Problems — DSA Journal' },
+  '/': { render: renderLanding, title: 'Interview Prep Hub' },
+  '/quant': { render: renderQuant, title: 'Quant Trading — Interview Prep Hub' },
+  '/quant/probability': { render: renderProbability, init: initProbability, title: 'Probability & Combinatorics — Quant Trading' },
+  '/dsa': { render: renderHome, title: 'Data Structures & Algorithms' },
+  '/dsa/arrays': { render: renderArrays, init: initArrays, title: 'Arrays & Hashing — DSA Journal' },
+  '/dsa/two-pointers': { render: renderTwoPointers, init: initTwoPointers, title: 'Two Pointers — DSA Journal' },
+  '/dsa/sliding-window': { render: renderSlidingWindow, init: initSlidingWindow, title: 'Sliding Window — DSA Journal' },
+  '/dsa/linked-lists': { render: renderLinkedLists, init: initLinkedLists, title: 'Linked Lists — DSA Journal' },
+  '/dsa/stacks-queues': { render: renderStacksQueues, init: initStacksQueues, title: 'Stacks & Queues — DSA Journal' },
+  '/dsa/binary-search': { render: renderBinarySearch, init: initBinarySearch, title: 'Binary Search — DSA Journal' },
+  '/dsa/trees': { render: renderTrees, init: initTrees, title: 'Trees & BFS/DFS — DSA Journal' },
+  '/dsa/dynamic-programming': { render: renderDP, init: initDP, title: 'Dynamic Programming — DSA Journal' },
+  '/dsa/graphs': { render: renderGraphs, init: initGraphs, title: 'Graphs — DSA Journal' },
+  '/dsa/complexity': { render: renderComplexity, init: initComplexity, title: 'Complexity Cheat Sheet — DSA Journal' },
+  '/dsa/problem-solving': { render: renderProblemSolving, init: initProblemSolving, title: 'How to Solve Problems — DSA Journal' },
+}
+
+function renderNavbar(path) {
+  const inDsa = path.startsWith('/dsa')
+  const inQuant = path.startsWith('/quant')
+  return `
+<nav>
+  <a href="/" class="${path === '/' ? 'current' : ''}">Interview Prep Hub</a>
+  <span class="sep">·</span>
+  <a href="/dsa" class="${inDsa ? 'current' : ''}">DSA</a>
+  <span class="sep">·</span>
+  <a href="/quant" class="${inQuant ? 'current' : ''}">Quant Trading</a>
+</nav>`
 }
 
 function route() {
   const path = location.pathname
   const page = routes[path] ?? routes['/']
   document.title = page.title
-  document.getElementById('app').innerHTML = page.render()
+  document.getElementById('app').innerHTML = renderNavbar(path) + page.render()
   page.init?.()
   if (!location.hash) window.scrollTo(0, 0)
   initTOC()

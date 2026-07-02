@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Dynamic Programming</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#what">What is DP?</a>
@@ -246,8 +240,8 @@ export function render() {
   </div>
 
   <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-    <a href="/trees" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Trees &amp; BFS/DFS</a>
-    <a href="/graphs" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Graphs →</a>
+    <a href="/dsa/trees" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Trees &amp; BFS/DFS</a>
+    <a href="/dsa/graphs" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Graphs →</a>
   </div>
 </article>
 `

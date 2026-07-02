@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Two Pointers</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#what">What are Two Pointers?</a>
@@ -278,8 +272,8 @@ k = <span class="fn">remove_duplicates</span>(arr)
   </div>
 
   <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-    <a href="/arrays" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Arrays &amp; Hashing</a>
-    <a href="/sliding-window" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Sliding Window →</a>
+    <a href="/dsa/arrays" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Arrays &amp; Hashing</a>
+    <a href="/dsa/sliding-window" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Sliding Window →</a>
   </div>
 </article>
 `

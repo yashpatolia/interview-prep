@@ -1,11 +1,5 @@
 export function render() {
   return `
-<nav>
-  <a href="/">Home</a>
-  <span class="sep">›</span>
-  <span class="current">Binary Search</span>
-</nav>
-
 <div class="toc">
   <h4>On This Page</h4>
   <a href="#idea">The Big Idea</a>
@@ -348,8 +342,8 @@ nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num
   </div>
 
   <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-    <a href="/stacks-queues" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Stacks &amp; Queues</a>
-    <a href="/trees" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Trees &amp; BFS/DFS →</a>
+    <a href="/dsa/stacks-queues" style="color: var(--muted); text-decoration: none; font-size: 0.9rem;">← Stacks &amp; Queues</a>
+    <a href="/dsa/trees" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Trees &amp; BFS/DFS →</a>
   </div>
 </article>
 `
