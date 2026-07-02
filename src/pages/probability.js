@@ -184,6 +184,20 @@ p_disease_given_pos = (p_pos_given_disease * p_disease) / p_pos
         <summary>Show hint</summary>
         <p class="hint-body">Don't compute "at least one match" directly — use the <strong>complement</strong>. Compute P(no two people share a birthday) as a product of shrinking fractions: <code>365/365 · 364/365 · 363/365 · ...</code> for 23 people, then subtract from 1. The answer is surprisingly over 50%.</p>
       </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <p>Work with the complement: P(at least one shared birthday) = 1 − P(all 23 birthdays distinct).</p>
+        <p>The first person can have any birthday: 365/365. The second must avoid the first: 364/365. The third must avoid the first two: 363/365. Continue down to the 23rd person, who must avoid the 22 already taken: 343/365.</p>
+<pre><code>P(no match) = 365/365 · 364/365 · 363/365 · ... · 343/365</code></pre>
+<pre><code><span class="kw">from</span> math <span class="kw">import</span> perm
+
+n_people = <span class="num">23</span>
+p_no_match = perm(<span class="num">365</span>, n_people) / <span class="num">365</span> ** n_people
+p_match = <span class="num">1</span> - p_no_match
+
+<span class="fn">print</span>(<span class="fn">round</span>(p_match, <span class="num">4</span>))   <span class="cm"># 0.5073</span></code></pre>
+        <p class="complexity-line"><strong>Answer:</strong> ≈ 50.7% — with just 23 people, it's more likely than not that two share a birthday, because the number of <em>pairs</em> to check (C(23,2) = 253) grows much faster than the number of people.</p>
+      </details>
     </div>
   </div>
 
@@ -198,6 +212,19 @@ p_disease_given_pos = (p_pos_given_disease * p_disease) / p_pos
       <details class="hint-details">
         <summary>Show hint</summary>
         <p class="hint-body">List the full sample space of equally likely outcomes first: <code>{BB, BG, GB, GG}</code>. "At least one is a girl" eliminates BB, leaving 3 equally likely outcomes: <code>{BG, GB, GG}</code>. Only one of those three is "both girls" — so the answer is 1/3, not 1/2. This is a direct application of conditional probability: shrink the sample space to match the given information, then count within it.</p>
+      </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <p>Let A = "both children are girls" and B = "at least one child is a girl". We want <code>P(A | B) = P(A ∩ B) / P(B)</code>.</p>
+        <p>The full sample space (each equally likely, assuming independent 50/50 births) is <code>{BB, BG, GB, GG}</code>. B is true for every outcome except BB, so <code>P(B) = 3/4</code>. A ∩ B is just <code>{GG}</code>, so <code>P(A ∩ B) = 1/4</code>.</p>
+<pre><code><span class="kw">from</span> itertools <span class="kw">import</span> product
+
+outcomes = <span class="fn">list</span>(product(<span class="st">'BG'</span>, <span class="fn">repeat</span>=<span class="num">2</span>))       <span class="cm"># [BB, BG, GB, GG]</span>
+at_least_one_girl = [o <span class="kw">for</span> o <span class="kw">in</span> outcomes <span class="kw">if</span> <span class="st">'G'</span> <span class="kw">in</span> o]
+both_girls = [o <span class="kw">for</span> o <span class="kw">in</span> at_least_one_girl <span class="kw">if</span> o == (<span class="st">'G'</span>, <span class="st">'G'</span>)]
+
+<span class="fn">print</span>(<span class="fn">len</span>(both_girls) / <span class="fn">len</span>(at_least_one_girl))   <span class="cm"># 0.3333...</span></code></pre>
+        <p class="complexity-line"><strong>Answer:</strong> 1/3, not 1/2 — the common wrong answer treats it like an independent coin flip on "the other child," but conditioning on B removes an entire outcome (BB) from the sample space rather than fixing one specific child as a girl.</p>
       </details>
     </div>
   </div>
@@ -214,6 +241,30 @@ p_disease_given_pos = (p_pos_given_disease * p_disease) / p_pos
         <summary>Show hint</summary>
         <p class="hint-body">Track probability mass, not doors. Your original pick has a 1/3 chance of being the car — that never changes just because a goat was revealed. The other two doors together held 2/3. The host's reveal doesn't remove any of that 2/3 probability, it just concentrates all of it onto the one remaining unopened door. Switching wins 2/3 of the time.</p>
       </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <p>Yes, switch — it doubles your odds. Condition on where the car actually is:</p>
+        <p><strong>If you stay:</strong> you win only when your original pick was the car — probability 1/3.</p>
+        <p><strong>If you switch:</strong> you win whenever your original pick was <em>wrong</em> — probability 2/3 — because the host is forced to reveal the one remaining goat, leaving the car behind the other door.</p>
+<pre><code><span class="kw">import</span> random
+
+<span class="kw">def</span> <span class="fn">simulate</span>(switch: <span class="fn">bool</span>, trials: <span class="fn">int</span> = <span class="num">100_000</span>) -> <span class="fn">float</span>:
+    wins = <span class="num">0</span>
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(trials):
+        car = random.randint(<span class="num">0</span>, <span class="num">2</span>)
+        pick = random.randint(<span class="num">0</span>, <span class="num">2</span>)
+        <span class="cm"># host opens a goat door that isn't the pick and isn't the car</span>
+        remaining = [d <span class="kw">for</span> d <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>) <span class="kw">if</span> d != pick <span class="kw">and</span> d != car]
+        host_opens = random.choice(remaining)
+        <span class="kw">if</span> switch:
+            pick = [d <span class="kw">for</span> d <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>) <span class="kw">if</span> d != pick <span class="kw">and</span> d != host_opens][<span class="num">0</span>]
+        wins += pick == car
+    <span class="kw">return</span> wins / trials
+
+<span class="fn">print</span>(simulate(switch=<span class="kw">False</span>))  <span class="cm"># ≈ 0.333</span>
+<span class="fn">print</span>(simulate(switch=<span class="kw">True</span>))   <span class="cm"># ≈ 0.667</span></code></pre>
+        <p class="complexity-line"><strong>Answer:</strong> switching wins 2/3 of the time vs. 1/3 for staying — the key insight is that the host's reveal is not random information, it's forced by the rules, so it doesn't change your original 1/3.</p>
+      </details>
     </div>
   </div>
 
@@ -228,6 +279,18 @@ p_disease_given_pos = (p_pos_given_disease * p_disease) / p_pos
       <details class="hint-details">
         <summary>Show hint</summary>
         <p class="hint-body">This is "favorable outcomes / total outcomes" using pure combinations. Total ways to choose any 4 from 10: <code>C(10,4)</code>. Favorable: choose 2 men from 6 <strong>and</strong> 2 women from 4 — multiply, don't add, because both choices happen together: <code>C(6,2) · C(4,2)</code>. Divide the two.</p>
+      </details>
+      <details class="solution-details">
+        <summary>Show optimal solution</summary>
+        <p>Total ways to pick any 4 people from the group of 10: <code>C(10,4)</code>. Favorable outcomes require exactly 2 men <strong>and</strong> exactly 2 women — since these two choices happen together, multiply the counts: <code>C(6,2) · C(4,2)</code>.</p>
+<pre><code><span class="kw">from</span> math <span class="kw">import</span> comb
+
+total = comb(<span class="num">10</span>, <span class="num">4</span>)                      <span class="cm"># any 4 of 10 people</span>
+favorable = comb(<span class="num">6</span>, <span class="num">2</span>) * comb(<span class="num">4</span>, <span class="num">2</span>)     <span class="cm"># 2 of 6 men AND 2 of 4 women</span>
+
+<span class="fn">print</span>(favorable, <span class="st">'/'</span>, total, <span class="st">'='</span>, favorable / total)
+<span class="cm"># 90 / 210 = 0.4286  (== 3/7)</span></code></pre>
+        <p class="complexity-line"><strong>Answer:</strong> 90/210 = 3/7 ≈ 42.9% — the "AND" between two independent selection choices is what tells you to multiply the combination counts instead of adding them.</p>
       </details>
     </div>
   </div>
