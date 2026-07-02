@@ -1,0 +1,7 @@
+services:
+  interview-prep:
+    build: .
+    container_name: interview-prep
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3001:80"
