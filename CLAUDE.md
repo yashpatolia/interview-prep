@@ -1,23 +1,23 @@
-# Yash's LeetCode Journey — Project Context
+# Interview Prep — Project Context
 
-## About Yash
+## About the User
 - Knows Python well, no prior DSA background
 - Learning DSA from scratch through this project
 
 ## How We Work
 1. Claude teaches a DSA topic first (lesson page with diagrams/animations/analogies/code)
-2. Yash attempts the practice problems on LeetCode
-3. Yash shares his solution/approach; Claude reviews and suggests improvements
+2. User attempts the practice problems on LeetCode
+3. User shares their solution/approach; Claude reviews and suggests improvements
 4. Move to the next topic
 
 ## Format for Lessons
 - Vite SPA — all pages are JS modules in `src/pages/<name>.js` exporting `render()` + `init()`
 - Must include: diagrams or animations, Python demo code, analogies, complexity table, practice problems
-- Problems include hints but not full solutions — Yash solves them first
+- Problems include hints but not full solutions — user solves them first
 
 ## Project Structure
 ```
-leetcode/
+interview-prep/
 ├── CLAUDE.md
 ├── index.html              ← SPA shell (just <div id="app">)
 ├── vite.config.js
@@ -52,4 +52,4 @@ leetcode/
 
 ## Current Status
 - All 9 chapters + complexity cheat sheet built and accessible
-- Yash is working through practice problems for each chapter
+- User is working through practice problems for each chapter

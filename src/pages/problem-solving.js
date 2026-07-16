@@ -5,17 +5,26 @@ export function render() {
   <a href="#process">The 6-Step Process</a>
   <a href="#signals">Pattern Signal Words</a>
   <a href="#constraints">Constraint → Complexity</a>
+  <a href="#coding">Writing the Code</a>
+  <a href="#templates">Code Templates</a>
+  <a href="#tricks">Python Quick Tricks</a>
   <a href="#worked">Worked Example</a>
   <a href="#traps">Common Traps</a>
+  <a href="#interview">Talking Through It</a>
 </div>
 
 <article>
   <h1><em>How to Solve</em> Problems</h1>
-  <p class="subtitle">Reference · Recognise the pattern before writing a single line of code</p>
+  <p class="subtitle">Reference · Recognise the pattern, then translate it into clean code</p>
 
   <div class="callout tip">
     <div class="callout-title">The Core Insight</div>
     Every LeetCode problem is a disguised version of a pattern you already know. The skill isn't memorising solutions — it's learning to strip away the story and see the underlying structure. A "trip planning" problem and a "course scheduling" problem are both topological sort in disguise.
+  </div>
+
+  <div class="callout analogy">
+    <div class="callout-title">Two Separate Skills</div>
+    Struggling with problems usually comes from blending two different skills into one panicked scramble. Split them apart: <strong>Skill 1 — Recognition</strong> is figuring out <em>which</em> pattern this problem is (the steps below, and the signal-word table). <strong>Skill 2 — Translation</strong> is turning that pattern into working code without fumbling syntax (the templates and quick tricks further down). Practice them separately — recognise-only drills (just name the pattern, don't code it) build Skill 1 fast without the friction of Skill 2 getting in the way.
   </div>
 
   <h2 id="process"><span class="emoji">🪜</span>The 6-Step Process</h2>
@@ -240,6 +249,206 @@ export function render() {
     </svg>
   </div>
 
+  <h2 id="coding"><span class="emoji">⌨️</span>Writing the Code</h2>
+
+  <p>Recognising the pattern is only half the battle — you still have to turn "this is a sliding window" into working Python under time pressure. Here's how to close that gap.</p>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-body">
+        <strong>Start from a skeleton, don't invent from scratch</strong>
+        <p>The patterns below have a near-fixed shape every time. Memorise the <em>skeleton</em>, not individual solutions — then you only have to fill in the one or two lines that are specific to this problem. See <a href="#templates">Code Templates</a>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-body">
+        <strong>Name variables for their role, not their type</strong>
+        <p><code>left</code>/<code>right</code>, <code>slow</code>/<code>fast</code>, <code>window_start</code>, <code>prev</code>/<code>curr</code>/<code>next_node</code> — these names document the algorithm as you read it back. <code>i</code>, <code>j</code>, <code>x</code>, <code>tmp</code> force you to hold the meaning in your head, which is exactly where bugs hide under pressure.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-body">
+        <strong>Build outside-in: shape first, logic second</strong>
+        <p>Write the loop or recursion structure with a <code>pass</code> or <code>...</code> inside first. Confirm it iterates the way you expect (add a print, trace it mentally). Only then fill in the condition/update logic. This isolates "did I loop wrong" bugs from "did I compute wrong" bugs instead of debugging both at once.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-body">
+        <strong>Reach for the Python tricks below instead of hand-rolling</strong>
+        <p><code>collections</code>, <code>heapq</code>, and <code>bisect</code> replace 5–10 lines of manual bookkeeping with one import. Fewer lines you wrote yourself is fewer places for a typo to hide. See <a href="#tricks">Python Quick Tricks</a>.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <h2 id="templates"><span class="emoji">🧩</span>Code Templates</h2>
+
+  <p>These are the shapes behind most of the patterns from the signal-word table. Type them out from memory a few times each — muscle memory here frees up your brain for the actual problem-specific logic during an interview.</p>
+
+  <pre><code><span class="cm"># Two Pointers (opposite ends, sorted array)</span>
+<span class="kw">def</span> <span class="fn">two_pointer</span>(nums):
+    left, right = <span class="num">0</span>, <span class="fn">len</span>(nums) - <span class="num">1</span>
+    <span class="kw">while</span> left < right:
+        <span class="kw">if</span> <span class="cm"># condition too small</span>:
+            left += <span class="num">1</span>
+        <span class="kw">elif</span> <span class="cm"># condition too big</span>:
+            right -= <span class="num">1</span>
+        <span class="kw">else</span>:
+            <span class="cm"># found it — record / return</span>
+            left += <span class="num">1</span>; right -= <span class="num">1</span></code><span class="code-label">Python</span></pre>
+
+  <pre><code><span class="cm"># Sliding Window (variable size)</span>
+<span class="kw">def</span> <span class="fn">sliding_window</span>(s):
+    left = <span class="num">0</span>
+    best = <span class="num">0</span>
+    window = {}  <span class="cm"># or a running sum / set / Counter</span>
+
+    <span class="kw">for</span> right <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(s)):
+        <span class="cm"># 1. expand: add s[right] to window</span>
+
+        <span class="kw">while</span> <span class="cm"># window is invalid</span>:
+            <span class="cm"># 2. shrink: remove s[left] from window</span>
+            left += <span class="num">1</span>
+
+        <span class="cm"># 3. window [left, right] is valid here — update best</span>
+        best = <span class="fn">max</span>(best, right - left + <span class="num">1</span>)
+    <span class="kw">return</span> best</code><span class="code-label">Python</span></pre>
+
+  <pre><code><span class="cm"># Binary Search (the safe default template)</span>
+<span class="kw">def</span> <span class="fn">binary_search</span>(nums, target):
+    lo, hi = <span class="num">0</span>, <span class="fn">len</span>(nums) - <span class="num">1</span>
+    <span class="kw">while</span> lo <= hi:
+        mid = (lo + hi) // <span class="num">2</span>
+        <span class="kw">if</span> nums[mid] == target:
+            <span class="kw">return</span> mid
+        <span class="kw">elif</span> nums[mid] < target:
+            lo = mid + <span class="num">1</span>
+        <span class="kw">else</span>:
+            hi = mid - <span class="num">1</span>
+    <span class="kw">return</span> -<span class="num">1</span>  <span class="cm"># not found; lo is the insertion point</span></code><span class="code-label">Python</span></pre>
+
+  <pre><code><span class="cm"># BFS (shortest path / level order)</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">def</span> <span class="fn">bfs</span>(start, get_neighbors):
+    queue = deque([start])
+    visited = {start}
+    steps = <span class="num">0</span>
+
+    <span class="kw">while</span> queue:
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(queue)):  <span class="cm"># process one full level</span>
+            node = queue.popleft()
+            <span class="cm"># check goal condition on node here</span>
+            <span class="kw">for</span> nxt <span class="kw">in</span> <span class="fn">get_neighbors</span>(node):
+                <span class="kw">if</span> nxt <span class="kw">not in</span> visited:
+                    visited.add(nxt)
+                    queue.append(nxt)
+        steps += <span class="num">1</span></code><span class="code-label">Python</span></pre>
+
+  <pre><code><span class="cm"># DFS / Backtracking (all paths, combinations, permutations)</span>
+<span class="kw">def</span> <span class="fn">backtrack</span>(path, choices):
+    <span class="kw">if</span> <span class="cm"># path is a complete solution</span>:
+        results.append(path[:])  <span class="cm"># copy! path is mutated after this</span>
+        <span class="kw">return</span>
+
+    <span class="kw">for</span> choice <span class="kw">in</span> choices:
+        <span class="kw">if</span> <span class="cm"># choice is valid given current path</span>:
+            path.append(choice)         <span class="cm"># make the choice</span>
+            <span class="fn">backtrack</span>(path, next_choices)
+            path.pop()                  <span class="cm"># undo it — this line is the one people forget</span></code><span class="code-label">Python</span></pre>
+
+  <pre><code><span class="cm"># DP (bottom-up tabulation)</span>
+<span class="kw">def</span> <span class="fn">dp_solve</span>(n):
+    dp = [<span class="num">0</span>] * (n + <span class="num">1</span>)
+    dp[<span class="num">0</span>] = <span class="cm"># base case</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n + <span class="num">1</span>):
+        dp[i] = <span class="cm"># recurrence using dp[i-1], dp[i-2], ...</span>
+    <span class="kw">return</span> dp[n]</code><span class="code-label">Python</span></pre>
+
+  <h2 id="tricks"><span class="emoji">⚡</span>Python Quick Tricks</h2>
+
+  <p>Every one of these replaces boilerplate you'd otherwise hand-write (and risk a typo in) during an interview.</p>
+
+  <table>
+    <thead><tr><th>Instead of...</th><th>Use this</th><th>Why it wins</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Manually checking <code>if key in dict</code> before incrementing</td>
+        <td><code>from collections import Counter</code><br><code>counts = Counter(nums)</code></td>
+        <td>One line builds a full frequency map; <code>counts.most_common(k)</code> gives the top-k for free</td>
+      </tr>
+      <tr>
+        <td><code>if key not in d: d[key] = []</code> then <code>d[key].append(x)</code></td>
+        <td><code>from collections import defaultdict</code><br><code>d = defaultdict(list)</code></td>
+        <td><code>d[key].append(x)</code> just works even the first time — no existence check</td>
+      </tr>
+      <tr>
+        <td><code>list.pop(0)</code> for a queue</td>
+        <td><code>from collections import deque</code><br><code>q.popleft()</code></td>
+        <td><code>pop(0)</code> is O(n) (shifts the whole list); <code>deque</code> is O(1) on both ends</td>
+      </tr>
+      <tr>
+        <td>Sorting the whole array to find the k largest</td>
+        <td><code>import heapq</code><br><code>heapq.nlargest(k, nums)</code> / <code>heapq.heappush(heap, x)</code></td>
+        <td>O(n log k) instead of O(n log n); a heap only tracks the k you care about</td>
+      </tr>
+      <tr>
+        <td>Writing your own binary search for insertion point</td>
+        <td><code>import bisect</code><br><code>bisect.bisect_left(nums, target)</code></td>
+        <td>Battle-tested, no off-by-one risk — use it whenever you just need the index, not a custom condition</td>
+      </tr>
+      <tr>
+        <td><code>for i in range(len(nums)): x = nums[i]</code></td>
+        <td><code>for i, x in enumerate(nums):</code></td>
+        <td>Gives you the index and value together, cleaner and less error-prone</td>
+      </tr>
+      <tr>
+        <td>Nested loop to pair up two lists</td>
+        <td><code>for a, b in zip(list1, list2):</code></td>
+        <td>Walks two (or more) sequences in lockstep in one line</td>
+      </tr>
+      <tr>
+        <td>A manual loop to reverse a string/list</td>
+        <td><code>s[::-1]</code></td>
+        <td>Slicing with step -1 reverses in one expression</td>
+      </tr>
+      <tr>
+        <td>A hardcoded huge number as a sentinel</td>
+        <td><code>float('inf')</code> / <code>float('-inf')</code></td>
+        <td>Always bigger/smaller than any real value, so "no valid answer yet" comparisons just work</td>
+      </tr>
+      <tr>
+        <td>Custom comparator functions for sorting</td>
+        <td><code>sorted(items, key=lambda x: (x[0], -x[1]))</code></td>
+        <td>Sort by multiple fields, mixing ascending/descending, in one line</td>
+      </tr>
+      <tr>
+        <td>Manually generating all subsets / orderings</td>
+        <td><code>from itertools import combinations, permutations</code></td>
+        <td>When n is small (see the constraint table) these are faster to write than backtracking from scratch</td>
+      </tr>
+      <tr>
+        <td><code>set(a) & set(b)</code> written as a loop with membership checks</td>
+        <td><code>set(a) & set(b)</code> (intersection), <code>|</code> (union), <code>-</code> (difference)</td>
+        <td>Set algebra operators read exactly like the math — fast and self-documenting</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <div class="callout-title">When your code is wrong: debugging under pressure</div>
+    <ol style="font-family:var(--font-display); font-size:0.9rem; color:var(--muted); line-height:1.8; margin:0; padding-left:1.25rem">
+      <li><strong>Find the smallest failing input</strong> — not the whole test case, the smallest one that still breaks. A 2–3 element example is enough to spot most bugs.</li>
+      <li><strong>Print the state inside the loop</strong> — the variables driving your pointers/window/recursion, on every iteration. The exact iteration where the value stops matching your hand trace is where the bug lives.</li>
+      <li><strong>Check the boundaries first</strong> — the first and last iteration of a loop, the base case of a recursion, and the moment a pointer crosses another. Most bugs are off-by-one, not logic errors.</li>
+      <li><strong>Re-read your own condition out loud</strong> — <code>&lt;</code> vs <code>&lt;=</code>, <code>and</code> vs <code>or</code>. Say it in English ("keep going while left is strictly less than right") and compare to what's on screen.</li>
+    </ol>
+  </div>
+
   <h2 id="worked"><span class="emoji">🔬</span>Worked Example</h2>
 
   <p>Let's apply the 6-step process to a real problem: <strong>LeetCode #3 — Longest Substring Without Repeating Characters</strong>.</p>
@@ -365,6 +574,44 @@ export function render() {
         <td><strong>Confusing O(n) BFS space with O(1)</strong></td>
         <td>BFS queues can hold O(n) nodes at once (think: a complete binary tree's last level). Claiming O(1) space is wrong.</td>
         <td>BFS space = O(max width of the graph). DFS space = O(max depth / height).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="interview"><span class="emoji">🗣️</span>Talking Through It In an Interview</h2>
+
+  <p>An interviewer is grading your process, not just your final answer. Silently typing for 20 minutes reads as worse than narrating a slightly slower solution — they can't award points for reasoning they can't see.</p>
+
+  <table>
+    <thead><tr><th>Moment</th><th>Say something like...</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Right after hearing the problem</td>
+        <td>"Let me restate this to make sure I've got it..." then repeat it back. Ask about anything ambiguous: can the array be empty? Are there duplicates? Negative numbers?</td>
+      </tr>
+      <tr>
+        <td>Before jumping to the optimal approach</td>
+        <td>"The brute force here is O(n²) — check every pair. Let me think about whether the constraint allows that, or if we need better." Naming the brute force costs you 10 seconds and proves you can always fall back to <em>something</em>.</td>
+      </tr>
+      <tr>
+        <td>Once you spot the pattern</td>
+        <td>"This looks like a sliding window, since we want a contiguous max/min substring." Name the pattern out loud — it invites the interviewer to correct you early if you're off track, before you've written any code.</td>
+      </tr>
+      <tr>
+        <td>Right before coding</td>
+        <td>"So the plan is: expand right, and whenever the window's invalid, shrink from the left." One sentence. If they nod, code. If they hesitate, that's your cue to re-check the plan.</td>
+      </tr>
+      <tr>
+        <td>While coding</td>
+        <td>Narrate what you're writing, not why it's DSA — "setting up left and right pointers at the two ends" — so silence doesn't stretch past ~30 seconds.</td>
+      </tr>
+      <tr>
+        <td>After coding</td>
+        <td>"Let me trace through the example." Actually do it, out loud, on the given input — this is where you catch your own bugs before the interviewer does.</td>
+      </tr>
+      <tr>
+        <td>At the end</td>
+        <td>State time and space complexity unprompted. It signals you think about it by default, not only when asked.</td>
       </tr>
     </tbody>
   </table>
